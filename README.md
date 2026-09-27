@@ -35,6 +35,7 @@ reporting, and evidence-based test reporting.
 | Execution report | [`reports/TEST_EXECUTION_REPORT.md`](reports/TEST_EXECUTION_REPORT.md) |
 | Screenshot evidence | [`evidence/README.md`](evidence/README.md) |
 | Jira import CSV | [`defects/jira-import.csv`](defects/jira-import.csv) |
+| Jira execution evidence | [`evidence/jira/README.md`](evidence/jira/README.md) |
 | HTML results dashboard | [`reports/html/index.html`](reports/html/index.html) |
 | CI workflow | [`.github/workflows/qa.yml`](.github/workflows/qa.yml) |
 | Demo recording guide | [`docs/DEMO_GUIDE.md`](docs/DEMO_GUIDE.md) |
@@ -86,7 +87,7 @@ existing data, so run it only against `proshop_qa_portfolio`.
 
 ## Current status
 
-Repository cloned, isolated test database seeded, frontend production build
-verified, and API, Chrome, accessibility, and performance cycles executed. Six defects were confirmed.
+Repository published, isolated test database seeded, frontend production build
+verified, and API, Chrome, accessibility, and performance cycles executed. Six defects were confirmed and imported into Jira.
 Execution status and evidence are maintained in `reports/TEST_EXECUTION_REPORT.md`;
 13 cases remain `Not Run` because their complete expected behavior has not been verified.
