@@ -1,15 +1,15 @@
 import { chromium } from 'playwright-core';
+import { browserLaunchOptions } from './browser-launch.mjs';
 import { mkdir, copyFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const baseURL = process.env.QA_BASE_URL || 'http://127.0.0.1:5000';
-const chromePath = process.env.QA_CHROME_PATH || 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
 const outputDir = path.resolve('evidence', 'demo');
 const tempDir = path.join(outputDir, '.video-temp');
 await mkdir(tempDir, { recursive: true });
 
-const browser = await chromium.launch({ executablePath: chromePath, headless: true, args: ['--no-sandbox'] });
+const browser = await chromium.launch(browserLaunchOptions());
 const context = await browser.newContext({
   viewport: { width: 1280, height: 720 },
   recordVideo: { dir: tempDir, size: { width: 1280, height: 720 } }

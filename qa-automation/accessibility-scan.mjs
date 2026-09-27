@@ -1,12 +1,9 @@
 import { chromium } from 'playwright-core';
+import { browserLaunchOptions } from './browser-launch.mjs';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const baseURL = process.env.QA_BASE_URL || 'http://127.0.0.1:5000';
-const configuredChrome = process.env.QA_CHROME_PATH;
-const defaultChrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
-const launchOptions = { headless: true, args: ['--no-sandbox'] };
-if (configuredChrome !== 'bundled') launchOptions.executablePath = configuredChrome || defaultChrome;
 
 const outputDir = path.resolve('evidence', 'accessibility', '2026-09-27');
 await mkdir(outputDir, { recursive: true });
@@ -22,7 +19,7 @@ const targets = [
   { name: 'product-detail', path: `/product/${productId}` }
 ];
 
-const browser = await chromium.launch(launchOptions);
+const browser = await chromium.launch(browserLaunchOptions());
 const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const pages = [];
 

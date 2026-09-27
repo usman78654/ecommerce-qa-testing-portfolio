@@ -1,9 +1,9 @@
 import { chromium } from 'playwright-core';
+import { browserLaunchOptions } from './browser-launch.mjs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const baseURL = process.env.QA_BASE_URL || 'http://127.0.0.1:5000';
-const chromePath = process.env.QA_CHROME_PATH || 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
 const evidenceDir = path.resolve('evidence', 'browser', '2026-09-26');
 const results = [];
 let registeredEmail = '';
@@ -15,7 +15,7 @@ const products = [...page1.products, ...page2.products];
 const airpods = products.find(p => p.name.includes('Airpods'));
 const mouse = products.find(p => p.name.includes('Gaming Mouse'));
 
-const browser = await chromium.launch({ executablePath: chromePath, headless: true, args: ['--no-sandbox'] });
+const browser = await chromium.launch(browserLaunchOptions());
 
 async function scenario(id, fn) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
