@@ -1,0 +1,94 @@
+{
+  "runAt": "2026-09-26T18:54:13.640Z",
+  "baseURL": "http://127.0.0.1:5000",
+  "browser": "Installed Google Chrome via Playwright Core",
+  "total": 12,
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "id": "TC-CAT-001",
+      "status": "Passed",
+      "actual": "Four products rendered on page 1; screenshot evidence/browser/2026-09-26/TC-CAT-001-home-desktop.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:02.744Z"
+    },
+    {
+      "id": "TC-CAT-003/004",
+      "status": "Passed",
+      "actual": "Mixed-case search returned the Airpods product; screenshot evidence/browser/2026-09-26/TC-CAT-003-search-mixed-case.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:02.897Z"
+    },
+    {
+      "id": "TC-CAT-005",
+      "status": "Passed",
+      "actual": "No product cards displayed; screenshot evidence/browser/2026-09-26/TC-CAT-005-no-results.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:03.554Z"
+    },
+    {
+      "id": "TC-CAT-007",
+      "status": "Passed",
+      "actual": "Out-of-stock label shown and Add To Cart disabled; screenshot evidence/browser/2026-09-26/TC-CAT-007-out-of-stock.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:04.333Z"
+    },
+    {
+      "id": "TC-CART-001/002/006/007",
+      "status": "Passed",
+      "actual": "Quantity options capped at 10; 3 x 89.99 = 269.97 and persisted after refresh; screenshot evidence/browser/2026-09-26/TC-CART-006-decimal-and-persistence.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:05.614Z"
+    },
+    {
+      "id": "TC-CHK-001",
+      "status": "Passed",
+      "actual": "Guest redirected to login and returned to Shipping after authentication",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:05.944Z"
+    },
+    {
+      "id": "TC-CHK-002/004",
+      "status": "Passed",
+      "actual": "Shipping and payment persisted to order review; screenshot evidence/browser/2026-09-26/TC-CHK-004-order-review.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:06.148Z"
+    },
+    {
+      "id": "TC-ORD-001",
+      "status": "Passed",
+      "actual": "Order 6ab814cef5e76b0d3eab8c82 created and order detail displayed; screenshot evidence/browser/2026-09-26/TC-ORD-001-order-created.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:06.409Z"
+    },
+    {
+      "id": "TC-AUTH-007/CART-008",
+      "status": "Passed",
+      "actual": "After account switch, Jane's cart is empty; screenshot evidence/browser/2026-09-26/TC-CART-008-account-cart-isolation.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:07.647Z"
+    },
+    {
+      "id": "TC-ADM-002",
+      "status": "Passed",
+      "actual": "Customer denied admin user list and redirected to http://127.0.0.1:5000/",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:08.300Z"
+    },
+    {
+      "id": "TC-UX-001",
+      "status": "Passed",
+      "actual": "375px catalog-to-cart usable without horizontal overflow; screenshot evidence/browser/2026-09-26/TC-UX-001-mobile-cart.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:10.995Z"
+    },
+    {
+      "id": "TC-UX-002",
+      "status": "Passed",
+      "actual": "375px checkout review usable without horizontal overflow; screenshot evidence/browser/2026-09-26/TC-UX-002-mobile-checkout.png",
+      "screenshot": "",
+      "timestamp": "2026-09-26T18:54:12.334Z"
+    }
+  ]
+}

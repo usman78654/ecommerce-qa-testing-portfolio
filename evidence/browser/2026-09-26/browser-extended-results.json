@@ -1,0 +1,95 @@
+{
+  "runAt": "2026-09-26T18:58:22.786Z",
+  "baseURL": "http://127.0.0.1:5000",
+  "browser": "Installed Google Chrome via Playwright Core",
+  "total": 14,
+  "passed": 13,
+  "failed": 1,
+  "results": [
+    {
+      "id": "TC-AUTH-001",
+      "status": "Passed",
+      "actual": "Unique user qa.browser.1790449069871@example.test registered and authenticated",
+      "timestamp": "2026-09-26T18:57:51.162Z"
+    },
+    {
+      "id": "TC-AUTH-002",
+      "status": "Passed",
+      "actual": "Duplicate seeded email rejected with User already exists",
+      "timestamp": "2026-09-26T18:57:52.424Z"
+    },
+    {
+      "id": "TC-AUTH-003",
+      "status": "Passed",
+      "actual": "Mismatched confirmation rejected without navigation",
+      "timestamp": "2026-09-26T18:57:53.460Z"
+    },
+    {
+      "id": "TC-AUTH-004",
+      "status": "Passed",
+      "actual": "Empty registration rejected with message: User validation failed: name: Path `name` is required., email: Path `email` is required., password: Path `password` is required.",
+      "timestamp": "2026-09-26T18:57:54.391Z"
+    },
+    {
+      "id": "TC-AUTH-005/006",
+      "status": "Passed",
+      "actual": "Invalid password rejected; valid customer credentials then authenticated",
+      "timestamp": "2026-09-26T18:57:55.684Z"
+    },
+    {
+      "id": "TC-AUTH-008",
+      "status": "Passed",
+      "actual": "Profile name updated to Jane QA and persisted after refresh",
+      "timestamp": "2026-09-26T18:57:58.261Z"
+    },
+    {
+      "id": "TC-CAT-002",
+      "status": "Failed",
+      "actual": "page.waitForFunction: Timeout 10000ms exceeded.",
+      "evidence": "evidence/browser/2026-09-26/TC-CAT-002-failure.png",
+      "timestamp": "2026-09-26T18:58:09.590Z"
+    },
+    {
+      "id": "TC-CAT-006",
+      "status": "Passed",
+      "actual": "Airpods detail showed price, stock, rating/reviews, description, and purchase controls",
+      "timestamp": "2026-09-26T18:58:10.630Z"
+    },
+    {
+      "id": "TC-REV-001/002",
+      "status": "Passed",
+      "actual": "First review accepted and second review by same customer rejected",
+      "timestamp": "2026-09-26T18:58:14.318Z"
+    },
+    {
+      "id": "TC-CART-003/004/005",
+      "status": "Passed",
+      "actual": "Multi-item subtotal was 229.97; quantity update and item removal recalculated accurately",
+      "timestamp": "2026-09-26T18:58:16.076Z"
+    },
+    {
+      "id": "TC-CHK-003",
+      "status": "Passed",
+      "actual": "Missing required country blocked shipping submission and focused invalid field state",
+      "timestamp": "2026-09-26T18:58:17.648Z"
+    },
+    {
+      "id": "TC-ORD-004",
+      "status": "Passed",
+      "actual": "Customer profile listed at least one previously created order",
+      "timestamp": "2026-09-26T18:58:19.442Z"
+    },
+    {
+      "id": "TC-ADM-001",
+      "status": "Passed",
+      "actual": "Guest direct admin navigation redirected to Login without data",
+      "timestamp": "2026-09-26T18:58:20.279Z"
+    },
+    {
+      "id": "TC-ADM-005/006-smoke",
+      "status": "Passed",
+      "actual": "Admin user list and order list rendered expected seeded data",
+      "timestamp": "2026-09-26T18:58:22.606Z"
+    }
+  ]
+}

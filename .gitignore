@@ -1,0 +1,15 @@
+# Local secrets and raw evidence
+proshop/.env
+reports/newman-results.json
+evidence/raw/
+evidence/browser/*/created-order-id.txt
+
+# Dependencies and generated builds
+node_modules/
+proshop/node_modules/
+proshop/frontend/node_modules/
+proshop/frontend/build/
+
+# OS and editor files
+.DS_Store
+Thumbs.db

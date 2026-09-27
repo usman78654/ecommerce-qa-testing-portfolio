@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProShop QA Portfolio Dashboard</title>
+<style>
+:root{--navy:#20364a;--blue:#2878b5;--green:#218838;--red:#c0392b;--amber:#d68910;--ink:#24313d;--muted:#687785;--paper:#f5f7fa;--line:#dce3e9}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}header{background:linear-gradient(135deg,var(--navy),#46647e);color:#fff;padding:36px max(5vw,24px)}header h1{margin:0 0 6px;font-size:32px}header p{margin:0;color:#dce8f2}main{max-width:1180px;margin:auto;padding:28px 24px 60px}h2{margin-top:34px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 2px 10px #1d344510}.card h3{margin:0;color:var(--muted);font-size:14px;text-transform:uppercase;letter-spacing:.04em}.metric{font-size:36px;font-weight:750;color:var(--blue);margin:6px 0}.metric.good{color:var(--green)}.metric.bad{color:var(--red)}.metric.warn{color:var(--amber)}.metric.muted{font-size:24px;color:var(--muted)}.card p{margin:0;color:var(--muted)}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;margin-top:16px}.bar-row{display:grid;grid-template-columns:80px 1fr 36px;gap:12px;align-items:center;margin:12px 0}.track{height:18px;background:#edf1f4;border-radius:9px;overflow:hidden}.bar{height:100%}.passed{background:var(--green)}.failed{background:var(--red)}.not-run{background:#9aa7b2}table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f7;color:#34495e}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}.tag{display:inline-block;padding:3px 8px;border-radius:12px;background:#e8eef3;margin:2px 4px 2px 0;font-size:12px}.footer{color:var(--muted);margin-top:30px}.no-go{color:#fff;background:var(--red);display:inline-block;padding:7px 12px;border-radius:6px;font-weight:700}
+</style></head><body>
+<header><h1>ProShop QA Portfolio</h1><p>Evidence dashboard · generated 2026-09-27T08:51:37.627Z</p></header>
+<main><p class="no-go">Release recommendation: NO-GO</p>
+<div class="grid">
+  <div class="card"><h3>Traceable cases</h3><div class="metric">45</div><p>32 executed · 71.1% coverage</p></div>
+  <div class="card"><h3>Pass rate</h3><div class="metric good">90.6%</div><p>29 passed of 32 executed</p></div>
+  <div class="card"><h3>Failed cases</h3><div class="metric bad">3</div><p>Evidence attached to every result</p></div>
+  <div class="card"><h3>Confirmed defects</h3><div class="metric bad">6</div><p>Critical authorization defect open</p></div>
+  <div class="card"><h3>Browser workflows</h3><div class="metric">26</div><p>25 passed · 1 failed</p></div>
+  
+  <div class="card"><h3>Accessibility</h3><div class="metric">5</div><p>pages scanned with axe</p></div>
+  <div class="card"><h3>Affected nodes</h3><div class="metric warn">74</div><p>8 rule violations</p></div>
+</div>
+<h2>Case execution</h2><div class="panel"><div class="bar-row"><span>Passed</span><div class="track"><div class="bar passed" style="width:64.44444444444444%"></div></div><strong>29</strong></div><div class="bar-row"><span>Failed</span><div class="track"><div class="bar failed" style="width:6.666666666666667%"></div></div><strong>3</strong></div><div class="bar-row"><span>Not Run</span><div class="track"><div class="bar not-run" style="width:28.888888888888886%"></div></div><strong>13</strong></div></div>
+<h2>Failed traceable cases</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Module</th><th>Title</th><th>Priority</th><th>Evidence</th></tr></thead><tbody>
+  <tr><td>TC-CAT-002</td><td>Catalog</td><td>Navigate pagination boundary</td><td>P2</td><td>evidence/browser/2026-09-26/TC-CAT-002-failure.png</td></tr>
+  <tr><td>TC-ORD-005</td><td>Orders</td><td>Block another customer's order detail</td><td>P0</td><td>reports/newman-results.json</td></tr>
+  <tr><td>TC-ORD-006</td><td>Order Detail</td><td>Display item line totals with two decimals</td><td>P1</td><td>evidence/browser/2026-09-26/TC-ORD-001-order-created.png</td></tr></tbody></table></div>
+<h2>Defects</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Summary</th><th>Severity / priority</th></tr></thead><tbody><tr><td>BUG-001</td><td>Admin user-list API exposes password hashes</td><td>High / P1  </td></tr><tr><td>BUG-002</td><td>Customer can view another customer's complete order</td><td>Critical / P0  </td></tr><tr><td>BUG-003</td><td>Order detail displays a floating-point artifact</td><td>Medium / P2  </td></tr><tr><td>BUG-004</td><td>Storefront page-2 control does not navigate</td><td>Medium / P1  </td></tr><tr><td>BUG-005</td><td>Interactive catalog and quantity controls lack accessible names</td><td>Medium / P1  </td></tr><tr><td>BUG-006</td><td>Text and controls fail minimum color-contrast checks</td><td>Medium / P2  </td></tr></tbody></table></div>
+<h2>Local performance smoke</h2><div class="table-wrap"><table><thead><tr><th>Scenario</th><th>Requests</th><th>Concurrency</th><th>Average</th><th>P95</th><th>Throughput</th><th>Error rate</th></tr></thead><tbody>
+  <tr><td>catalog</td><td>100</td><td>10</td><td>31.12 ms</td><td>46.48 ms</td><td>310.47/s</td><td>0.0%</td></tr>
+  <tr><td>search</td><td>100</td><td>10</td><td>18.65 ms</td><td>21.27 ms</td><td>518/s</td><td>0.0%</td></tr>
+  <tr><td>product-detail</td><td>100</td><td>10</td><td>35.69 ms</td><td>120.03 ms</td><td>274.07/s</td><td>0.0%</td></tr></tbody></table></div>
+<p class="footer">Source evidence: manual-test-cases.csv, browser JSON reports, axe results, performance results, and defect reports. Automated accessibility results do not replace manual WCAG evaluation. Local load results are not production capacity claims.</p>
+</main></body></html>

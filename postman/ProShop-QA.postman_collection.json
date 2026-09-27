@@ -1,0 +1,168 @@
+{
+  "info": {
+    "_postman_id": "49923a82-83b8-49a1-a395-proshopqaportfolio",
+    "name": "ProShop QA API Regression",
+    "description": "Positive, negative, authentication, authorization, and workflow checks for ProShop v2. Run sequentially against a freshly seeded dedicated QA database.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "pm.test('Response time is below 2000 ms', () => pm.expect(pm.response.responseTime).to.be.below(2000));",
+          "pm.test('Response does not expose a password', () => pm.expect(pm.response.text()).not.to.match(/\\\"password\\\"\\s*:/i));"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Public catalog",
+      "item": [
+        {
+          "name": "API health",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Application is available', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "List products and capture fixture",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/products?pageNumber=1", "host": ["{{baseUrl}}"], "path": ["api", "products"], "query": [{ "key": "pageNumber", "value": "1" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Returns 200 JSON', () => { pm.response.to.have.status(200); pm.response.to.be.json; });", "const body = pm.response.json();", "pm.test('Product page has expected shape', () => { pm.expect(body.products).to.be.an('array').that.is.not.empty; pm.expect(body.page).to.eql(1); pm.expect(body.pages).to.be.a('number'); });", "const product = body.products[0];", "pm.expect(product).to.include.all.keys('_id', 'name', 'price', 'countInStock');", "pm.environment.set('productId', product._id);", "pm.environment.set('productPrice', String(product.price));", "pm.environment.set('productName', product.name);", "pm.environment.set('productImage', product.image);"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Search products case-insensitively",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/products?keyword=aIrPoDs", "host": ["{{baseUrl}}"], "path": ["api", "products"], "query": [{ "key": "keyword", "value": "aIrPoDs" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Search succeeds', () => pm.response.to.have.status(200));", "pm.test('Every result matches term', () => pm.response.json().products.forEach(p => pm.expect(p.name.toLowerCase()).to.include('airpods')));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Search with no results",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/products?keyword=zz-no-product", "host": ["{{baseUrl}}"], "path": ["api", "products"], "query": [{ "key": "keyword", "value": "zz-no-product" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('No-result search is a valid empty page', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().products).to.eql([]); });"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Get captured product",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/products/{{productId}}", "host": ["{{baseUrl}}"], "path": ["api", "products", "{{productId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Product detail is consistent', () => { pm.response.to.have.status(200); const b = pm.response.json(); pm.expect(b._id).to.eql(pm.environment.get('productId')); pm.expect(String(b.price)).to.eql(pm.environment.get('productPrice')); });"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Reject invalid product ID",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/products/not-an-object-id", "host": ["{{baseUrl}}"], "path": ["api", "products", "not-an-object-id"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Invalid ID returns 404 JSON', () => { pm.response.to.have.status(404); pm.response.to.be.json; pm.expect(pm.response.json().message).to.be.a('string'); });"], "type": "text/javascript" } }]
+        }
+      ]
+    },
+    {
+      "name": "02 Authentication and session",
+      "item": [
+        {
+          "name": "Protected profile without session",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/users/profile", "host": ["{{baseUrl}}"], "path": ["api", "users", "profile"] } },
+          "event": [{ "listen": "prerequest", "script": { "exec": ["pm.cookies.jar().clear(pm.environment.get('baseUrl'));"], "type": "text/javascript" } }, { "listen": "test", "script": { "exec": ["pm.test('Missing session is denied', () => pm.response.to.have.status(401));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Invalid customer login",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{customerEmail}}\",\n  \"password\": \"wrong-password\"\n}" }, "url": { "raw": "{{baseUrl}}/api/users/auth", "host": ["{{baseUrl}}"], "path": ["api", "users", "auth"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Invalid credentials return 401', () => pm.response.to.have.status(401));", "pm.test('Error is generic', () => pm.expect(pm.response.json().message).to.eql('Invalid email or password'));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Customer login",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{customerEmail}}\",\n  \"password\": \"{{customerPassword}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/users/auth", "host": ["{{baseUrl}}"], "path": ["api", "users", "auth"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Customer login succeeds', () => pm.response.to.have.status(200));", "const body = pm.response.json();", "pm.test('Customer identity returned without password', () => { pm.expect(body.email).to.eql(pm.environment.get('customerEmail')); pm.expect(body.isAdmin).to.eql(false); pm.expect(body).not.to.have.property('password'); });", "pm.test('Secure auth cookie is issued', () => pm.expect(pm.cookies.get('jwt')).to.exist);"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Get own profile",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/users/profile", "host": ["{{baseUrl}}"], "path": ["api", "users", "profile"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Authenticated profile succeeds', () => pm.response.to.have.status(200));", "pm.test('Profile belongs to customer', () => pm.expect(pm.response.json().email).to.eql(pm.environment.get('customerEmail')));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Customer cannot list users",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Customer is denied admin API', () => pm.response.to.have.status(401));", "pm.test('No user list is exposed', () => pm.expect(pm.response.json()).not.to.be.an('array'));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Logout",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/api/users/logout", "host": ["{{baseUrl}}"], "path": ["api", "users", "logout"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Logout succeeds', () => pm.response.to.have.status(200));", "pm.test('Logout confirmation returned', () => pm.expect(pm.response.json().message).to.eql('Logged out successfully'));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Profile denied after logout",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/users/profile", "host": ["{{baseUrl}}"], "path": ["api", "users", "profile"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Cleared session cannot access profile', () => pm.response.to.have.status(401));"], "type": "text/javascript" } }]
+        }
+      ]
+    },
+    {
+      "name": "03 Customer order workflow",
+      "item": [
+        {
+          "name": "Customer login for order",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{customerEmail}}\",\n  \"password\": \"{{customerPassword}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/users/auth", "host": ["{{baseUrl}}"], "path": ["api", "users", "auth"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Customer session restored', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Reject empty order",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"orderItems\": [],\n  \"shippingAddress\": {\"address\": \"1 Main St\", \"city\": \"Lahore\", \"postalCode\": \"54000\", \"country\": \"Pakistan\"},\n  \"paymentMethod\": \"PayPal\"\n}" }, "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Empty order returns 400', () => pm.response.to.have.status(400));", "pm.test('Empty-order message is clear', () => pm.expect(pm.response.json().message).to.eql('No order items'));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Create order with tampered client price",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"orderItems\": [{\"_id\": \"{{productId}}\", \"name\": \"{{productName}}\", \"image\": \"{{productImage}}\", \"price\": 0.01, \"qty\": 1}],\n  \"shippingAddress\": {\"address\": \"1 Main St\", \"city\": \"Lahore\", \"postalCode\": \"54000\", \"country\": \"Pakistan\"},\n  \"paymentMethod\": \"PayPal\"\n}" }, "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Order is created', () => pm.response.to.have.status(201));", "const body = pm.response.json();", "pm.test('Server replaces tampered price', () => pm.expect(String(body.orderItems[0].price)).to.eql(pm.environment.get('productPrice')));", "pm.test('Total is derived from authoritative price', () => pm.expect(body.totalPrice).to.be.above(0.01));", "pm.environment.set('orderId', body._id);"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "List own orders",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/orders/mine", "host": ["{{baseUrl}}"], "path": ["api", "orders", "mine"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Order history succeeds', () => pm.response.to.have.status(200));", "pm.test('Created order is present', () => pm.expect(pm.response.json().some(o => o._id === pm.environment.get('orderId'))).to.eql(true));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Get created order",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/orders/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "orders", "{{orderId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Order detail succeeds', () => pm.response.to.have.status(200));", "pm.test('Correct order returned', () => pm.expect(pm.response.json()._id).to.eql(pm.environment.get('orderId')));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Logout order owner",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/api/users/logout", "host": ["{{baseUrl}}"], "path": ["api", "users", "logout"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Order owner logs out', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Login as second customer",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{secondCustomerEmail}}\",\n  \"password\": \"{{secondCustomerPassword}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/users/auth", "host": ["{{baseUrl}}"], "path": ["api", "users", "auth"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Second customer login succeeds', () => pm.response.to.have.status(200));", "pm.test('Session belongs to second customer', () => pm.expect(pm.response.json().email).to.eql(pm.environment.get('secondCustomerEmail')));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Block access to another customer's order",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/orders/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "orders", "{{orderId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Foreign order is forbidden', () => pm.expect(pm.response.code).to.be.oneOf([401, 403]));", "pm.test('Foreign order details are not disclosed', () => { if (pm.response.headers.get('Content-Type') && pm.response.headers.get('Content-Type').includes('json')) pm.expect(pm.response.json()).not.to.have.property('orderItems'); });"], "type": "text/javascript" } }]
+        }
+      ]
+    },
+    {
+      "name": "04 Administrator authorization",
+      "item": [
+        {
+          "name": "Admin login",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/users/auth", "host": ["{{baseUrl}}"], "path": ["api", "users", "auth"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Admin login succeeds', () => pm.response.to.have.status(200));", "pm.test('Admin role is true', () => pm.expect(pm.response.json().isAdmin).to.eql(true));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Admin lists users",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Admin user list succeeds', () => pm.response.to.have.status(200));", "pm.test('Users exclude passwords', () => { const users = pm.response.json(); pm.expect(users).to.be.an('array').that.is.not.empty; users.forEach(u => pm.expect(u).not.to.have.property('password')); });"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Admin lists orders",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Admin order list succeeds', () => pm.response.to.have.status(200));", "pm.test('Created order is visible', () => pm.expect(pm.response.json().some(o => o._id === pm.environment.get('orderId'))).to.eql(true));"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "Admin marks order delivered",
+          "request": { "method": "PUT", "header": [], "url": { "raw": "{{baseUrl}}/api/orders/{{orderId}}/deliver", "host": ["{{baseUrl}}"], "path": ["api", "orders", "{{orderId}}", "deliver"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Delivery update succeeds', () => pm.response.to.have.status(200));", "pm.test('Delivery state and time are stored', () => { const b = pm.response.json(); pm.expect(b.isDelivered).to.eql(true); pm.expect(b.deliveredAt).to.exist; });"], "type": "text/javascript" } }]
+        }
+      ]
+    }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:5000" }]
+}

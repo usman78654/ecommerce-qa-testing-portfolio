@@ -1,0 +1,93 @@
+{
+  "generatedAt": "2026-09-27T08:50:35.606Z",
+  "profile": "Local smoke load; not a production capacity benchmark",
+  "baseURL": "http://127.0.0.1:5000",
+  "thresholds": {
+    "p95Ms": 500,
+    "errorRate": 0.01
+  },
+  "passed": true,
+  "totalRequests": 300,
+  "results": [
+    {
+      "name": "catalog",
+      "path": "/api/products?pageNumber=1",
+      "requests": 100,
+      "concurrency": 10,
+      "elapsedMs": 322.09,
+      "throughputPerSecond": 310.47,
+      "errorRate": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 100
+      },
+      "responseTimeMs": {
+        "min": 9.42,
+        "average": 31.12,
+        "p50": 30.69,
+        "p90": 37.84,
+        "p95": 46.48,
+        "max": 55
+      }
+    },
+    {
+      "name": "search",
+      "path": "/api/products?keyword=Airpods",
+      "requests": 100,
+      "concurrency": 10,
+      "elapsedMs": 193.05,
+      "throughputPerSecond": 518,
+      "errorRate": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 100
+      },
+      "responseTimeMs": {
+        "min": 9.61,
+        "average": 18.65,
+        "p50": 18.48,
+        "p90": 20.84,
+        "p95": 21.27,
+        "max": 28.51
+      }
+    },
+    {
+      "name": "product-detail",
+      "path": "/api/products/6ab814c13af54e156acde931",
+      "requests": 100,
+      "concurrency": 10,
+      "elapsedMs": 364.87,
+      "throughputPerSecond": 274.07,
+      "errorRate": 0,
+      "errors": 0,
+      "statuses": {
+        "200": 100
+      },
+      "responseTimeMs": {
+        "min": 7.55,
+        "average": 35.69,
+        "p50": 25.33,
+        "p90": 66.83,
+        "p95": 120.03,
+        "max": 137.67
+      }
+    }
+  ],
+  "checks": [
+    {
+      "scenario": "catalog",
+      "p95Passed": true,
+      "errorRatePassed": true
+    },
+    {
+      "scenario": "search",
+      "p95Passed": true,
+      "errorRatePassed": true
+    },
+    {
+      "scenario": "product-detail",
+      "p95Passed": true,
+      "errorRatePassed": true
+    }
+  ]
+}
